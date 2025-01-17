@@ -1,13 +1,12 @@
-import { config } from '~/src/config/config.js'
+import { config } from '~/src/config/config.js';
+import { createLogger } from '~/src/server/common/helpers/logging/logger.js';
+import { createServer } from '~/src/server/index.js';
 
-import { createServer } from '~/src/server/index.js'
-import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
-
-async function startServer() {
+async function startServer(routeConfig) {
   let server
 
   try {
-    server = await createServer()
+    server = await createServer(routeConfig)
     await server.start()
 
     server.logger.info('Server started successfully')
@@ -23,4 +22,5 @@ async function startServer() {
   return server
 }
 
-export { startServer }
+export { startServer };
+

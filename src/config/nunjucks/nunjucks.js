@@ -1,7 +1,7 @@
-import { fileURLToPath } from 'node:url'
-import path from 'path'
-import nunjucks from 'nunjucks'
 import hapiVision from '@hapi/vision'
+import { fileURLToPath } from 'node:url'
+import nunjucks from 'nunjucks'
+import path from 'path'
 
 import { config } from '~/src/config/config.js'
 import { context } from './context/context.js'
@@ -13,7 +13,8 @@ const nunjucksEnvironment = nunjucks.configure(
   [
     'node_modules/govuk-frontend/dist/',
     path.resolve(dirname, '../../server/common/templates'),
-    path.resolve(dirname, '../../server/common/components')
+    path.resolve(dirname, '../../server/common/components'),
+    path.resolve(dirname, '../../server/plugins/engine/views')
   ],
   {
     autoescape: true,

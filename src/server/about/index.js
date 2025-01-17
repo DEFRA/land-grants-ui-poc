@@ -12,7 +12,7 @@ export const about = {
       server.route([
         {
           method: 'GET',
-          path: '/about',
+          path: '/forms/about',
           ...aboutController
         }
       ])

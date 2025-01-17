@@ -10,7 +10,7 @@ export function buildNavigation(request) {
     },
     {
       text: 'About',
-      url: '/about',
+      url: '/forms/about',
       isActive: request?.path === '/about'
     }
   ]

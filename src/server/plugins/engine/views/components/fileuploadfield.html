@@ -1,0 +1,20 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
+
+{% macro FileUploadField(component) %}
+  {% set upload = component.model.upload %}
+
+  <h2 class="govuk-heading-m">Uploaded files</h2>
+  {% if upload.count %}
+    <p class="govuk-body">{{upload.successfulCount}} of {{upload.count}} files uploaded</p>
+    <p class="govuk-body">
+      {% if upload.pendingCount %}
+        <a href="{{ page.href }}" class="govuk-link govuk-link--no-visited-state">Refresh page to update file upload progress</a>
+      {% endif %}
+    </p>
+    {% if upload.summaryList.rows | length %}
+      {{ govukSummaryList(upload.summaryList) }}
+    {% endif %}
+  {% else %}
+    <p class="govuk-body">{{upload.count}} files uploaded</p>
+  {% endif %}
+{% endmacro %}

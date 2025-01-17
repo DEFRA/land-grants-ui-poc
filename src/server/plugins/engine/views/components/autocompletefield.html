@@ -1,0 +1,5 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% macro AutocompleteField(component) %}
+  {{ govukSelect(component.model) }}
+{% endmacro %}

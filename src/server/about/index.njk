@@ -1,21 +1,36 @@
 {% extends 'layouts/page.njk' %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% block content %}
   {{ appHeading({
-    text: heading,
-    caption: "Core delivery platform Node.js Frontend Template."
+    text: "Custom page"
   }) }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <div class="govuk-body" data-testid="app-page-body">
-        <p>
-          Based on <a href="https://defra.github.io/software-development-standards">DEFRA</a> and <a
-            href="https://design-system.service.gov.uk/">GOV.UK</a> best practices this starter kit provides you with
-          a deployable, production ready template 🙌🏻 to start your new service with.
-        </p>
+        <h1 class="govuk-heading-l">
+          Custom page showing previously saved DXT data:
+        </h1>
+
+        {% for section in checkAnswers %}
+          {% if section.title.text %}
+            <h2 class="govuk-heading-m">
+              {{ section.title.text }}
+            </h2>
+          {% endif %}
+
+          {{ govukSummaryList(section.summaryList) }}
+        {% endfor %}
+
+        <a href="/forms/summary" data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+          {{ "To DXT page" }}
+        </a>
       </div>
     </div>
   </div>
 
+  {% if config.cdpEnvironment == 'local' and context | length and not context.isForceAccess %}
+    {% include "partials/debug.html" %}
+  {% endif %}
 {% endblock %}
