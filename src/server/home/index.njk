@@ -2,23 +2,25 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% block content %}
-  {{ appHeading({
-    text: heading
-  }) }}
+  <div class="custom-page">
+    {{ appHeading({
+      text: heading
+    }) }}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <div class="govuk-body" data-testid="app-page-body">
-        <p>This is the landing page of our Frontend. At this point we are not using the DXT form, but you can access it by clicking the button below.</p>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-body" data-testid="app-page-body">
+          <p>This is the landing page of our Frontend. At this point we are not using the DXT form, but you can access it by clicking the button below.</p>
 
-        <a href="/forms/summary" data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
-          {{ "Start DXT form" }}
-        </a>
+          <a href="/forms/summary" data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+            {{ "Start DXT form" }}
+          </a>
+        </div>
       </div>
     </div>
-  </div>
 
-  {% if config.cdpEnvironment == 'local' and context | length and not context.isForceAccess %}
-    {% include "partials/debug.html" %}
-  {% endif %}
+    {% if config.cdpEnvironment == 'local' and context | length and not context.isForceAccess %}
+      {% include "partials/debug.html" %}
+    {% endif %}
+  </div>
 {% endblock %}
