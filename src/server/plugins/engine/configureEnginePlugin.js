@@ -14,7 +14,7 @@ export const configureEnginePlugin = async ({
     model = new FormModel(definition, {
       basePath: name
     });
-  }
+  }  
   return {
     plugin,
     options: {

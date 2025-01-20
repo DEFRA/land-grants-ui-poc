@@ -29,6 +29,13 @@ export class CacheService {
     await this.cache.set(key, state, ttl);
     return this.getState(request);
   }
+  async updateState(request, state) {
+    const key = this.Key(request);
+    const ttl = config.get('sessionTimeout');
+    const currentState = await this.getState(request);
+    await this.cache.set(key, {...currentState, ...state}, ttl);
+    return this.getState(request);
+  }
   async getConfirmationState(request) {
     const key = this.Key(request, ADDITIONAL_IDENTIFIER.Confirmation);
     const value = await this.cache.get(key);

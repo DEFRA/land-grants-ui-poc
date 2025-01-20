@@ -5,10 +5,11 @@
  */
 export const homeController = {
   handler(_request, h) {
-    return h.view('home/index', {
-      pageTitle: 'Home',
-      heading: 'Home'
-    })
+    const { cacheService } = _request.services([]);
+
+    cacheService.updateState(_request, {userName: "test"});
+
+    return h.redirect('/start');
   }
 }
 

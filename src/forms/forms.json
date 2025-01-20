@@ -2,26 +2,6 @@
     "name": "Grants",
     "pages": [
       {
-        "title": "Start page",
-        "path": "/start",
-        "controller": "StartPageController",
-        "components": [
-          {
-            "name": "Jhimsh",
-            "title": "Html",
-            "type": "Html",
-            "content": "<p class=\"govuk-body\">Welcome to Grants DXT Forms.</p>\n",
-            "options": {},
-            "schema": {}
-          }
-        ],
-        "next": [
-          {
-            "path": "/are-you-in-england"
-          }
-        ]
-      },
-      {
         "title": "DXT Form: Are you in England?",
         "path": "/are-you-in-england",
         "next": [
@@ -160,5 +140,5 @@
     ],
     "conditions": [],
     "outputEmail": "david.stone1@defra.gov.uk",
-    "startPage": "/start"
+    "startPage": "/are-you-in-england"
   }

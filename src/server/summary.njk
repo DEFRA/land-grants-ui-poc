@@ -19,12 +19,6 @@
       </h1>
 
       {% for section in checkAnswers %}
-        {% if section.title.text %}
-          <h2 class="govuk-heading-m">
-            {{ section.title.text }}
-          </h2>
-        {% endif %}
-
         {{ govukSummaryList(section.summaryList) }}
       {% endfor %}
 

@@ -5,3 +5,8 @@
     background-color: antiquewhite;
     padding: 32px;
 }
+
+div:has(> .govuk-input.external) {
+    display: none;
+} 
+

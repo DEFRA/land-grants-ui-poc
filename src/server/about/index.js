@@ -14,6 +14,11 @@ export const about = {
           method: 'GET',
           path: '/forms/about',
           ...aboutController
+        },
+        {
+          method: 'POST',
+          path: '/forms/about',
+          ...aboutController
         }
       ])
     }

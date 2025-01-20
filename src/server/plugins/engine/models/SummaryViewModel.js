@@ -30,7 +30,8 @@ export class SummaryViewModel {
       sections
     } = model;
     const {
-      isForceAccess
+      isForceAccess,
+      state
     } = context;
     this.page = page;
     this.pageTitle = page.title;
@@ -46,7 +47,7 @@ export class SummaryViewModel {
     // Format errors
     this.errors = result.error?.details.map(getError);
     this.details = this.summaryDetails(request, sections);
-
+    
     // Format check answers
     this.checkAnswers = this.details.map(detail => {
       const {
@@ -77,6 +78,25 @@ export class SummaryViewModel {
           }
         };
       });
+
+      // Testing a way of setting items externally...
+      // if (globalThis.items) {
+      //   globalThis.items.forEach(item => {
+      //     rows.push({
+      //       key: {
+      //         text: item.title
+      //       },
+      //       value: {
+      //         classes: 'app-prose-scope',
+      //         html: item.value || 'Not supplied'
+      //       },
+      //       actions: {
+      //         items: new Array(item)
+      //       }
+      //     })
+      //   })
+      // }
+
       return {
         title: title ? {
           text: title

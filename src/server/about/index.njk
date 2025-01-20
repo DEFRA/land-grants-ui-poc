@@ -1,32 +1,41 @@
 {% extends 'layouts/page.njk' %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
   {% block content %}
   <div class="custom-page">
     {{ appHeading({
-      text: "Custom page"
+      text: "Land Grants UI page"
     }) }}
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         <div class="govuk-body" data-testid="app-page-body">
           <h1 class="govuk-heading-l">
-            Custom page showing previously saved DXT data:
+            Custom page asking for new form data
           </h1>
+          <form method="post" novalidate>
+            <input type="hidden" name="crumb" value="{{ crumb }}">
+            <input type="hidden" name="action" value="validate">
 
-          {% for section in checkAnswers %}
-            {% if section.title.text %}
-              <h2 class="govuk-heading-m">
-                {{ section.title.text }}
-              </h2>
-            {% endif %}
+             {{ govukInput({
+                label: {
+                  text: "What is your name?"
+                },
+                id: "name",
+                name: "userName",
+                errorMessage: errorMessage
+              }) 
+            }}
 
-            {{ govukSummaryList(section.summaryList) }}
-          {% endfor %}
 
-          <a href="/forms/summary" data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
-            {{ "To DXT page" }}
-          </a>
+            {{ govukButton({
+              text: "To DXT page",
+              isStartButton: isStartPage,
+              preventDoubleClick: true
+            }) }}
+          </form>
         </div>
       </div>
     </div>

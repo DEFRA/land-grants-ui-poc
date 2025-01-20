@@ -1,14 +1,14 @@
 import Boom from '@hapi/boom';
 import { addDays, format } from 'date-fns';
 import { config } from "../../../../config/index.js";
+import { sendNotification } from "../../../utils/notify.js";
 import { FileUploadField } from "../components/FileUploadField.js";
 import { escapeMarkdown, getAnswer } from "../components/helpers.js";
 import { checkEmailAddressForLiveFormSubmission, checkFormStatus } from "../helpers.js";
 import { SummaryViewModel } from "../models/index.js";
-import { QuestionPageController } from "./QuestionPageController.js";
 import { persistFiles, submit } from "../services/formSubmissionService.js";
 import { getFormMetadata } from "../services/formsService.js";
-import { sendNotification } from "../../../utils/notify.js";
+import { QuestionPageController } from "./QuestionPageController.js";
 const designerUrl = config.get('designerUrl');
 const templateId = config.get('notifyTemplateId');
 export class SummaryPageController extends QuestionPageController {
@@ -19,7 +19,7 @@ export class SummaryPageController extends QuestionPageController {
   constructor(model, pageDef) {
     super(model, pageDef);
     this.viewName = 'summary';
-  }
+      }
   getSummaryViewModel(request, context) {
     const viewModel = new SummaryViewModel(request, this, context);
 
