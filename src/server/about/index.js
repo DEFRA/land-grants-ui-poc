@@ -1,4 +1,6 @@
-import { aboutController } from '~/src/server/about/controller.js'
+import { AboutController } from '~/src/server/about/controller.js';
+
+export const aboutController = AboutController.createRoute();
 
 /**
  * Sets up the routes used in the /about page.

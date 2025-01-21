@@ -79,23 +79,6 @@ export class SummaryViewModel {
         };
       });
 
-      // Testing a way of setting items externally...
-      // if (globalThis.items) {
-      //   globalThis.items.forEach(item => {
-      //     rows.push({
-      //       key: {
-      //         text: item.title
-      //       },
-      //       value: {
-      //         classes: 'app-prose-scope',
-      //         html: item.value || 'Not supplied'
-      //       },
-      //       actions: {
-      //         items: new Array(item)
-      //       }
-      //     })
-      //   })
-      // }
 
       return {
         title: title ? {
