@@ -30,8 +30,7 @@ export class SummaryViewModel {
       sections
     } = model;
     const {
-      isForceAccess,
-      state
+      isForceAccess
     } = context;
     this.page = page;
     this.pageTitle = page.title;
@@ -47,7 +46,7 @@ export class SummaryViewModel {
     // Format errors
     this.errors = result.error?.details.map(getError);
     this.details = this.summaryDetails(request, sections);
-    
+
     // Format check answers
     this.checkAnswers = this.details.map(detail => {
       const {
@@ -78,8 +77,6 @@ export class SummaryViewModel {
           }
         };
       });
-
-
       return {
         title: title ? {
           text: title

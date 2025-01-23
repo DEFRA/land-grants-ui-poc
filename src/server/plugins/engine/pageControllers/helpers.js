@@ -1,4 +1,5 @@
 import { ControllerType, controllerNameFromPath, isControllerName } from '@defra/forms-model';
+import { AboutController } from '~/src/server/about/controller.js';
 import * as PageControllers from "./index.js";
 export function isPageController(controllerName) {
   return isControllerName(controllerName) && controllerName in PageControllers;
@@ -23,6 +24,12 @@ export function createPage(model, pageDef) {
       break;
     case ControllerType.Page:
       controller = new PageControllers.QuestionPageController(model, pageDef);
+      break;
+    case 'AboutController':
+      controller = new AboutController(model, pageDef);
+      break;
+    case ControllerType.Terminal:
+      controller = new PageControllers.TerminalPageController(model, pageDef);
       break;
     case ControllerType.Summary:
       controller = new PageControllers.SummaryPageController(model, pageDef);

@@ -1,4 +1,4 @@
-import { ComponentType, hasComponents, hasNext, hasRepeater } from '@defra/forms-model';
+import { ComponentType, ControllerType, Engine, hasComponents, hasNext, hasRepeater } from '@defra/forms-model';
 import { actionSchema, crumbSchema, paramsSchema } from "../../../schemas/index.js";
 import { merge } from "../../../services/cacheService.js";
 import { ComponentCollection } from "../components/ComponentCollection.js";
@@ -40,6 +40,12 @@ export class QuestionPageController extends PageController {
         return pagePath === linkPath;
       });
     });
+  }
+  get allowContinue() {
+    if (this.model.engine === Engine.V2) {
+      return this.pageDef.controller !== ControllerType.Terminal;
+    }
+    return this.next.length > 0;
   }
   getItemId(request) {
     const {
@@ -143,6 +149,32 @@ export class QuestionPageController extends PageController {
 
     // Walk from summary page (no next links) to status page
     let defaultPath = path === summaryPath ? statusPath : undefined;
+    if (model.engine === Engine.V2) {
+      if (this.pageDef.controller !== ControllerType.Terminal) {
+        const {
+          pages
+        } = this.model;
+        const pageIndex = pages.indexOf(this);
+
+        // The "next" page is the first found after the current which is
+        // either unconditional or has a condition that evaluates to "true"
+        const nextPage = pages.slice(pageIndex + 1).find(page => {
+          const {
+            condition
+          } = page;
+          if (condition) {
+            const conditionResult = condition.fn(evaluationState);
+            if (!conditionResult) {
+              return false;
+            }
+          }
+          return true;
+        });
+        return nextPage?.path ?? defaultPath;
+      } else {
+        return defaultPath;
+      }
+    }
     const nextLink = next.find(link => {
       const {
         condition
@@ -281,7 +313,7 @@ export class QuestionPageController extends PageController {
         }
         return evaluatedComponent;
       });
-      viewModel.hasMissingNotificationEmail = await this.hasMissingNotificationEmail(request, context);      
+      viewModel.hasMissingNotificationEmail = await this.hasMissingNotificationEmail(request, context);
       return h.view(viewName, viewModel);
     };
   }
@@ -297,6 +329,12 @@ export class QuestionPageController extends PageController {
     } = context;
     const startPath = this.getStartPath();
     const summaryPath = this.getSummaryPath();
+    const {
+      formsService
+    } = this.model.services;
+    const {
+      getFormMetadata
+    } = formsService;
 
     // Warn the user if the form has no notification email set only on start page and summary page
     // if ([startPath, summaryPath].includes(path) && !isForceAccess) {
@@ -305,7 +343,7 @@ export class QuestionPageController extends PageController {
     //   } = await getFormMetadata(params.slug);
     //   return !notificationEmail;
     // }
-    // return false;
+    return false;
   }
 
   /**

@@ -3,7 +3,8 @@ import { FormModel } from "./models/FormModel.js";
 import { plugin } from "./plugin.js";
 export const configureEnginePlugin = async ({
   formFileName,
-  formFilePath
+  formFilePath,
+  services
 } = {}) => {
   let model;
   if (formFileName && formFilePath) {
@@ -13,12 +14,13 @@ export const configureEnginePlugin = async ({
     } = parse(formFileName);
     model = new FormModel(definition, {
       basePath: name
-    });
-  }  
+    }, services);
+  }
   return {
     plugin,
     options: {
-      model
+      model,
+      services
     }
   };
 };

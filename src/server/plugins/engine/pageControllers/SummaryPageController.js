@@ -1,14 +1,12 @@
 import Boom from '@hapi/boom';
 import { addDays, format } from 'date-fns';
 import { config } from "../../../../config/index.js";
-import { sendNotification } from "../../../utils/notify.js";
 import { FileUploadField } from "../components/FileUploadField.js";
 import { escapeMarkdown, getAnswer } from "../components/helpers.js";
 import { checkEmailAddressForLiveFormSubmission, checkFormStatus } from "../helpers.js";
 import { SummaryViewModel } from "../models/index.js";
-import { persistFiles, submit } from "../services/formSubmissionService.js";
-import { getFormMetadata } from "../services/formsService.js";
 import { QuestionPageController } from "./QuestionPageController.js";
+import { sendNotification } from "../../../utils/notify.js";
 const designerUrl = config.get('designerUrl');
 const templateId = config.get('notifyTemplateId');
 export class SummaryPageController extends QuestionPageController {
@@ -19,7 +17,7 @@ export class SummaryPageController extends QuestionPageController {
   constructor(model, pageDef) {
     super(model, pageDef);
     this.viewName = 'summary';
-      }
+  }
   getSummaryViewModel(request, context) {
     const viewModel = new SummaryViewModel(request, this, context);
 
@@ -63,6 +61,12 @@ export class SummaryPageController extends QuestionPageController {
       const {
         cacheService
       } = request.services([]);
+      const {
+        formsService
+      } = this.model.services;
+      const {
+        getFormMetadata
+      } = formsService;
 
       // Get the form metadata using the `slug` param
       const {
@@ -105,6 +109,12 @@ async function submitForm(request, summaryViewModel, model, state, emailAddress)
   await sendEmail(request, summaryViewModel, model, emailAddress);
 }
 async function extendFileRetention(model, state, updatedRetrievalKey) {
+  const {
+    formSubmissionService
+  } = model.services;
+  const {
+    persistFiles
+  } = formSubmissionService;
   const files = [];
 
   // For each file upload component with files in
@@ -128,7 +138,13 @@ async function extendFileRetention(model, state, updatedRetrievalKey) {
     return persistFiles(files, updatedRetrievalKey);
   }
 }
-function submitData(items, retrievalKey, sessionId) {
+function submitData(model, items, retrievalKey, sessionId) {
+  const {
+    formSubmissionService
+  } = model.services;
+  const {
+    submit
+  } = formSubmissionService;
   const payload = {
     sessionId,
     retrievalKey,
@@ -169,7 +185,7 @@ async function sendEmail(request, summaryViewModel, model, emailAddress) {
 
   // Submit data
   request.logger.info(logTags, 'Submitting data');
-  const submitResponse = await submitData(items, emailAddress, request.yar.id);
+  const submitResponse = await submitData(model, items, emailAddress, request.yar.id);
   if (submitResponse === undefined) {
     throw Boom.badRequest('Unexpected empty response from submit api');
   }

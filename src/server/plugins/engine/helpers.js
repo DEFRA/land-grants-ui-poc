@@ -1,4 +1,4 @@
-import { ControllerPath } from '@defra/forms-model';
+import { ControllerPath, Engine } from '@defra/forms-model';
 import Boom from '@hapi/boom';
 import { format, parseISO } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
@@ -104,6 +104,10 @@ export function findPage(model, path) {
   }) => path === findPath);
 }
 export function getStartPath(model) {
+  if (model?.engine === Engine.V2) {
+    const startPath = normalisePath(model.def.pages.at(0)?.path);
+    return startPath ? `/${startPath}` : ControllerPath.Start;
+  }
   const startPath = normalisePath(model?.def.startPage);
   return startPath ? `/${startPath}` : ControllerPath.Start;
 }

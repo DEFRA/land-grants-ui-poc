@@ -1,5 +1,4 @@
 import { QuestionPageController } from "./QuestionPageController.js";
-import { getFormMetadata } from "../services/formsService.js";
 export class StatusPageController extends QuestionPageController {
   constructor(model, pageDef) {
     super(model, pageDef);
@@ -25,6 +24,12 @@ export class StatusPageController extends QuestionPageController {
         return this.proceed(request, h, this.getStartPath());
       }
       const slug = request.params.slug;
+      const {
+        formsService
+      } = this.model.services;
+      const {
+        getFormMetadata
+      } = formsService;
       const {
         submissionGuidance
       } = await getFormMetadata(slug);

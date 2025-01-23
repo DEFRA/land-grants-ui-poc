@@ -11,6 +11,7 @@ export class PageController {
   pageDef;
   title;
   section;
+  condition;
   collection;
   viewName = 'index';
   constructor(model, pageDef) {
@@ -25,6 +26,11 @@ export class PageController {
 
     // Resolve section
     this.section = model.sections.find(section => section.name === pageDef.section);
+
+    // Resolve condition
+    if (pageDef.condition) {
+      this.condition = model.conditions[pageDef.condition];
+    }
   }
   get path() {
     return this.pageDef.path;

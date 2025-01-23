@@ -25,7 +25,7 @@
         "path": "/what-is-your-business",
         "next": [
           {
-            "path": "/summary"
+            "path": "/about"
           }
         ],
         "components": [
@@ -36,6 +36,27 @@
             "list": "dfdGFY",
             "hint": "",
             "options": {},
+            "schema": {}
+          }
+        ]
+      },
+      {
+        "title": "About controller page",
+        "path": "/about",
+        "controller": "AboutController",
+        "next": [
+          {
+            "path": "/summary"
+          }
+        ],
+        "components": [
+          {
+            "type": "TextField",
+            "name": "userName",
+            "title": "User name",
+            "options": {
+              "required": true
+            },
             "schema": {}
           }
         ]

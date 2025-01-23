@@ -1,16 +1,16 @@
-import { ConditionsModel, ControllerPath, ControllerType, formDefinitionSchema, hasRepeater } from '@defra/forms-model';
+import { ConditionsModel, ControllerPath, ControllerType, Engine, formDefinitionSchema, hasRepeater } from '@defra/forms-model';
 import { add } from 'date-fns';
 import { Parser } from 'expr-eval';
 import joi from 'joi';
-import { FormAction } from "../../../routes/types.js";
-import { merge } from "../../../services/cacheService.js";
 import { findPage, getError, getPage } from "../helpers.js";
 import { createPage } from "../pageControllers/helpers.js";
 import { validationOptions as opts } from "../pageControllers/validationOptions.js";
+import * as defaultServices from "../services/index.js";
+import { FormAction } from "../../../routes/types.js";
+import { merge } from "../../../services/cacheService.js";
 export class FormModel {
-  /**
-   * Responsible for instantiating the {@link PageControllerClass} and condition context from a form JSON
-   */
+  /** The runtime engine that should be used */
+  engine;
 
   /** the entire form JSON as an object */
   def;
@@ -21,7 +21,8 @@ export class FormModel {
   basePath;
   conditions;
   pages;
-  constructor(def, options) {
+  services;
+  constructor(def, options, services = defaultServices) {
     const result = formDefinitionSchema.validate(def, {
       abortEarly: false
     });
@@ -46,6 +47,7 @@ export class FormModel {
         value: false
       }]
     });
+    this.engine = def.engine;
     this.def = def;
     this.lists = def.lists;
     this.sections = def.sections;
@@ -53,6 +55,7 @@ export class FormModel {
     this.values = result.value;
     this.basePath = options.basePath;
     this.conditions = {};
+    this.services = services;
     def.conditions.forEach(conditionDef => {
       const condition = this.makeCondition(conditionDef);
       this.conditions[condition.name] = condition;
@@ -182,28 +185,14 @@ export class FormModel {
 
     // Find start page
     let nextPage = findPage(this, startPath);
+    this.initialiseContext(context);
 
     // Walk form pages from start
     while (nextPage) {
-      const {
-        collection,
-        pageDef
-      } = nextPage;
-
       // Add page to context
       context.relevantPages.push(nextPage);
-
-      // Skip evaluation state for repeater pages
-      if (!hasRepeater(pageDef)) {
-        Object.assign(context.evaluationState, collection.getContextValueFromState(context.state));
-      }
-
-      // Copy relevant state by expected keys
-      for (const key of nextPage.keys) {
-        if (typeof context.state[key] !== 'undefined') {
-          context.relevantState[key] = context.state[key];
-        }
-      }
+      this.assignEvaluationState(context, nextPage);
+      this.assignRelevantState(context, nextPage);
 
       // Stop at current page
       if (nextPage.path === currentPath) {
@@ -218,6 +207,41 @@ export class FormModel {
     context = validateFormState(request, page, context);
 
     // Add paths for navigation
+    this.assignPaths(context);
+    return context;
+  }
+  initialiseContext(context) {
+    // For the V2 engine, we need to initialise `evaluationState` to null
+    // for all keys. This is because the current condition evaluation
+    // library (eval-expr) will throw if an expression uses a key that is undefined.
+    if (this.engine === Engine.V2) {
+      for (const page of this.pages) {
+        for (const key of page.keys) {
+          context.evaluationState[key] = null;
+        }
+      }
+    }
+  }
+  assignEvaluationState(context, page) {
+    const {
+      collection,
+      pageDef
+    } = page;
+    // Skip evaluation state for repeater pages
+
+    if (!hasRepeater(pageDef)) {
+      Object.assign(context.evaluationState, collection.getContextValueFromState(context.state));
+    }
+  }
+  assignRelevantState(context, page) {
+    // Copy relevant state by expected keys
+    for (const key of page.keys) {
+      if (typeof context.state[key] !== 'undefined') {
+        context.relevantState[key] = context.state[key];
+      }
+    }
+  }
+  assignPaths(context) {
     for (const {
       keys,
       path
@@ -234,7 +258,6 @@ export class FormModel {
         break;
       }
     }
-    return context;
   }
 }
 

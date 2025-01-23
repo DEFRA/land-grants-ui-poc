@@ -3,20 +3,24 @@ import Boom from '@hapi/boom';
 import { isEqual } from 'date-fns';
 import Joi from 'joi';
 import { PREVIEW_PATH_PREFIX } from "../../constants.js";
-import { actionSchema, confirmSchema, crumbSchema, itemIdSchema, pathSchema, stateSchema } from "../../schemas/index.js";
 import { checkEmailAddressForLiveFormSubmission, checkFormStatus, findPage, getPage, getStartPath, normalisePath, proceed, redirectPath } from "./helpers.js";
 import { FormModel } from "./models/index.js";
 import { FileUploadPageController } from "./pageControllers/FileUploadPageController.js";
 import { RepeatPageController } from "./pageControllers/RepeatPageController.js";
-import { getFormDefinition, getFormMetadata } from "./services/formsService.js";
+import * as defaultServices from "./services/index.js";
+import { actionSchema, confirmSchema, crumbSchema, itemIdSchema, pathSchema, stateSchema } from "../../schemas/index.js";
 export const plugin = {
   name: '@defra/forms-runner/engine',
   dependencies: '@hapi/vision',
   multiple: true,
   register(server, options) {
     const {
-      model
+      model,
+      services = defaultServices
     } = options;
+    const {
+      formsService
+    } = services;
     server.app.model = model;
 
     // In-memory cache of FormModel items, exposed
@@ -41,7 +45,7 @@ export const plugin = {
       } = checkFormStatus(path);
 
       // Get the form metadata using the `slug` param
-      const metadata = await getFormMetadata(slug);
+      const metadata = await formsService.getFormMetadata(slug);
       const {
         id,
         [formState]: state
@@ -64,7 +68,7 @@ export const plugin = {
         server.logger.info(`Getting form definition ${id} (${slug}) ${formState}`);
 
         // Get the form definition using the `id` from the metadata
-        const definition = await getFormDefinition(id, formState);
+        const definition = await formsService.getFormDefinition(id, formState);
         if (!definition) {
           throw Boom.notFound(`No definition found for form metadata ${id} (${slug}) ${formState}`);
         }
@@ -80,14 +84,13 @@ export const plugin = {
         // Construct the form model
         const model = new FormModel(definition, {
           basePath
-        });
+        }, services);
 
         // Create new item and add it to the item cache
         item = {
           model,
           updatedAt: state.updatedAt
         };
-
         itemCache.set(key, item);
       }
 
