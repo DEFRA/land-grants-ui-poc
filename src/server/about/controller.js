@@ -24,6 +24,32 @@ export class AboutController extends PageController {
     };
   }
 
+  makePostRouteHandler() {
+    return async (request, context, h) => {
+      const {
+        collection,
+        viewName
+      } = this;
+      const {
+        isForceAccess,
+        state
+      } = context;
+
+      /**
+       * If there are any errors, render the page with the parsed errors
+       * @todo Refactor to match POST REDIRECT GET pattern
+       */
+      if (context.errors || isForceAccess) {
+        const viewModel = this.getViewModel(request, context);
+        viewModel.errors = collection.getErrors(viewModel.errors);
+        return h.view('about', viewModel);
+      }
+
+      // Save and proceed
+      await this.setState(request, state);
+      return this.proceed(request, h, this.getNextPath(context));
+    };
+  }
 
 
   /**

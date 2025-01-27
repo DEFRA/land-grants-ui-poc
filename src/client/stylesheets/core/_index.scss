@@ -6,3 +6,29 @@ div:has(> .govuk-input.external) {
     display: none;
 } 
 
+.govuk-main-wrapper {
+    border: 3px solid red;
+    padding: 32px;
+    margin: 32px 0;
+
+    &:has(.custom-page) {
+        border-color: green;
+        &:after {
+            font-family: GDS Transport,arial,sans-serif;
+            content: "This is a custom page";
+            color: green;
+            position: relative;
+            top: 24px;
+            left: -24px;
+        }
+    }
+
+    &:after {
+        font-family: GDS Transport,arial,sans-serif;
+        content: "This is a Defra Form page";
+        color: red;
+        position: relative;
+        top: 24px;
+        left: -24px;
+    }
+}

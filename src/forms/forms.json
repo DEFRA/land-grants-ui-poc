@@ -2,7 +2,7 @@
     "name": "Grants",
     "pages": [
       {
-        "title": "DXT Form: Are you in England?",
+        "title": "Are you in England?",
         "path": "/are-you-in-england",
         "next": [
           {
@@ -21,7 +21,7 @@
         ]
       },
       {
-        "title": "DXT Form: What is your business?",
+        "title": "What is your business?",
         "path": "/what-is-your-business",
         "next": [
           {
@@ -53,7 +53,7 @@
           {
             "type": "TextField",
             "name": "firstName",
-            "title": "First name",
+            "title": "First Name",
             "options": {
               "required": true
             },
@@ -64,7 +64,7 @@
       {
         "path": "/summary",
         "controller": "SummaryPageController",
-        "title": "DXT Form: Check your answers before going to custom page"
+        "title": "Check your answers before going to custom page"
       }
     ],
     "lists": [
