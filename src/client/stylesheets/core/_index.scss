@@ -7,16 +7,16 @@ div:has(> .govuk-input.external) {
 } 
 
 .govuk-main-wrapper {
-    border: 3px solid red;
+    border: 3px solid darkorange;
     padding: 32px;
     margin: 32px 0;
 
     &:has(.custom-page) {
-        border-color: green;
+        border-color: darkslateblue;
         &:after {
             font-family: GDS Transport,arial,sans-serif;
-            content: "This is a custom page";
-            color: green;
+            content: "This is a Land Grants custom page";
+            color: darkslateblue;
             position: relative;
             top: 24px;
             left: -24px;
@@ -25,8 +25,8 @@ div:has(> .govuk-input.external) {
 
     &:after {
         font-family: GDS Transport,arial,sans-serif;
-        content: "This is a Defra Form page";
-        color: red;
+        content: "This is a Defra Form (DXT) page";
+        color: darkorange;
         position: relative;
         top: 24px;
         left: -24px;
