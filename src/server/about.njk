@@ -7,7 +7,7 @@
   {% block content %}
   <div class="custom-page">
     {{ appHeading({
-      text: "Your personal data"
+      text: "Your data"
     }) }}
 
       {% if errors %}
@@ -32,11 +32,17 @@
                 },
                 id: "name",
                 name: "firstName",
+                value: context.state.firstName,
                 errorMessage: errorMessage
               }) 
             }}
 
-
+            <label>How much do you like this service?</label><br/>
+            <input type="range" min="1" max="10" value="5" id="rating" name="rating">
+            <span id="sliderValue">5</span>
+            <br/>
+            <br/>
+            <br/>
             {{ govukButton({
               text: "Continue",
               isStartButton: isStartPage,
@@ -46,6 +52,15 @@
         </div>
       </div>
     </div>
+
+<script>
+const slider = document.getElementById("rating");
+const output = document.getElementById("sliderValue");
+
+slider.oninput = function() {
+    output.innerHTML = this.value;
+}
+</script>
 
     {% if config.cdpEnvironment == 'local' and context | length and not context.isForceAccess %}
       {% include "partials/debug.html" %}

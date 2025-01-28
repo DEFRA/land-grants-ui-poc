@@ -17,9 +17,15 @@ export class AboutController extends PageController {
   makeGetRouteHandler() {
     return (request, context, h) => {
       const {
-        viewModel,
+        collection,
+        model,
         viewName
       } = this;
+      const {
+        evaluationState
+      } = context;
+
+      const viewModel = this.getViewModel(request, context);
       return h.view('about', viewModel);
     };
   }

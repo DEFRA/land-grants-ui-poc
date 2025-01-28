@@ -58,6 +58,15 @@
               "required": true
             },
             "schema": {}
+          },
+          {
+            "type": "TextField",
+            "name": "rating",
+            "title": "Rating",
+            "options": {
+              "required": true
+            },
+            "schema": {}
           }
         ]
       },

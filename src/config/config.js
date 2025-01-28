@@ -40,7 +40,7 @@ export const config = convict({
   serviceName: {
     doc: 'Applications Service Name',
     format: String,
-    default: 'land-grants-ui-poc'
+    default: 'Land Grants Application PoC'
   },
   root: {
     doc: 'Project root',
