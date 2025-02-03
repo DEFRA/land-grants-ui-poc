@@ -32,6 +32,7 @@ export class AboutController extends PageController {
 
   makePostRouteHandler() {
     return async (request, context, h) => {
+      request.app.myData = { user: 'Nick' }
       const {
         collection,
         viewName
@@ -40,7 +41,7 @@ export class AboutController extends PageController {
         isForceAccess,
         state
       } = context;
-
+      console.log('context.errors :: ', context.errors  , ' isForceAccess  :: ', isForceAccess);
       /**
        * If there are any errors, render the page with the parsed errors
        * @todo Refactor to match POST REDIRECT GET pattern
@@ -50,7 +51,8 @@ export class AboutController extends PageController {
         viewModel.errors = collection.getErrors(viewModel.errors);
         return h.view('about', viewModel);
       }
-
+      console.log('Info in context :: ', context);
+      console.log('Saving state :: ', state);
       // Save and proceed
       await this.setState(request, state);
       return this.proceed(request, h, this.getNextPath(context));

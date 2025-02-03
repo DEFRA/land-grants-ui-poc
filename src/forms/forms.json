@@ -67,6 +67,15 @@
               "required": true
             },
             "schema": {}
+          },
+          {
+            "type": "TextField",
+            "name": "clientSideApiData",
+            "title": "Client Side API Fetch Geo Data",
+            "options": {
+              "required": true
+            },
+            "schema": {}
           }
         ]
       },

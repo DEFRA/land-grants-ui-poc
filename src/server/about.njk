@@ -42,6 +42,18 @@
             <span id="sliderValue">5</span>
             <br/>
             <br/>
+            <label>API Data</label><br/>
+            {{ govukInput({
+                label: {
+                  text: "Client Side API Fetch Geo Data"
+                },
+                id: "apiData",
+                name: "clientSideApiData",
+                value: context.state.clientSideApiData,
+                errorMessage: errorMessage
+              }) 
+            }}
+            <br/>
             <br/>
             {{ govukButton({
               text: "Continue",
@@ -50,6 +62,14 @@
             }) }}
           </form>
         </div>
+        <div>
+           {{ govukButton({
+              id: "fetchData",
+              text: "Get Data",
+              preventDoubleClick: true
+            }) }}
+        </div>
+        <div id="dataContainer"></div>
       </div>
     </div>
 
@@ -60,6 +80,19 @@ const output = document.getElementById("sliderValue");
 slider.oninput = function() {
     output.innerHTML = this.value;
 }
+
+document.getElementById('fetchData').addEventListener('click', function() {
+            fetch('http://localhost:3001/api/geodata')  
+                .then(response => response.json())
+                .then(resp => {
+                    document.getElementById('dataContainer').innerHTML = `
+                        <p><strong>Parcel:</strong> ${resp.data.parcelId}</p>
+                        <p><strong>Geo Data:</strong> ${resp.data.geo}</p>
+                    `;
+                    document.getElementById('clientSideApiData').value = resp.data.geo;
+                })
+                .catch(error => console.error('Error:', error));
+        });
 </script>
 
     {% if config.cdpEnvironment == 'local' and context | length and not context.isForceAccess %}
