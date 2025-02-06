@@ -24,7 +24,7 @@ export default {
   context: path.resolve(dirname, 'src/client'),
   entry: {
     application: {
-      import: ['./javascripts/application.js', './stylesheets/application.scss']
+      import: ['./javascripts/application.js', './stylesheets/application.scss', './javascripts/govuk-prototype-components.js']
     }
   },
   experiments: {
@@ -54,6 +54,8 @@ export default {
   },
   resolve: {
     alias: {
+      node_modules: './node_modules',
+      '@x-govuk': './node_modules/@x-govuk',
       '/public/assets': path.join(govukFrontendPath, 'dist/govuk/assets')
     }
   },
